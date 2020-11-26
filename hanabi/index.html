@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>花火</title>
+</head>
+<style>
+  
+</style>
+<body>
+  <canvas id = "can"></canvas>  
+</body>
+  <script>
+    const SCREEN_W = 800;
+    const SCREEN_H =  500;
+    const BOX_SIZE = 10;
+    const BOX_KAZU = 500;
+　let elm = document.getElementById ("can");
+    let con  = elm.getContext ("2d");
+
+    elm.width = SCREEN_W;
+    elm.height = SCREEN_H;
+    elm.style.backgroundColor = "black";
+
+    //色
+    let colors = [
+       "red",
+       "white",
+       "green",
+       "blue",
+       "yellow",
+       "orange"
+    ];
+
+    //四角用配列
+    let box =[];
+
+  //四角クラス
+  class shikaku
+  {
+          constructor  (x, y, vx, vy)
+           {
+              this.x = x;
+              this.y = y;
+              this.vx = vx;
+              this.vy = vy;
+              this.kill = false;
+           }
+  //更新用メソッド
+         update()
+     {
+        this. x += this.vx/10;
+        this. y += this.vy/10;
+        if (this.x > SCREEN_W || this.y > SCREEN_H ||
+         this.x < 0 || this.y<0)
+        {
+            this.kill = true;
+        }
+
+               }
+//描画用
+draw()
+      {
+     con.fillStyle = colors[ rand (0,5)];
+     con.fillRect (this.x, this.y, BOX_SIZE,  BOX_SIZE);      
+       }
+}    
+
+//乱数
+function rand (min, max)
+{
+    let ran = Math.random() * (max-min +1);
+    return Math.floor (ran) + min;
+}
+
+let x = rand(0, SCREEN_W);
+let y = rand(0, SCREEN_H);
+
+let test = new shikaku (x, y, 0, 0);
+
+
+setInterval (main, 1000/60);
+function main()
+  {
+        con.clearRect (0,0,SCREEN_W, SCREEN_H) ;
+        for (let i = box.length-1; i>=0; i--)
+            {
+               box[i].draw();
+               box[i].update();
+                if(box[i].kill)
+               {
+               box.slice(i,1);
+           }
+            
+      }
+  }
+ 
+  document.onkeydown = function(e)
+  {
+     if (e. keyCode ==32)
+     {
+          let x = rand(0, SCREEN_W);
+          let y = rand(0, SCREEN_H);
+          for (let i = 0; i<BOX_KAZU; i++)
+          {
+           let ka = rand(1, 360) * Math.PI/ 180;
+           let vx = Math.sin(ka)*rand(1, 50);
+           let vy = Math.cos(ka)*rand(1, 50);
+          box.push ( new shikaku (x, y, vx, vy) );
+        } 
+  }
+}
+
+
+
+ </script>
+
+</body>
+</html>
